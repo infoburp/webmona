@@ -4,69 +4,248 @@
 		<meta charset='utf-8' />
 		<title>webmona</title>
 		<link rel="stylesheet" type="text/css" href="index.css" />
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css">
 		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="http://platform.twitter.com/widgets.js" async defer></script>
 		<script type="text/javascript" src="https://apis.google.com/js/plusone.js" async defer></script>
 	</head>
 	<body>
-		<canvas id="input-canvas" class='default-hidden'></canvas><br>
-		<canvas id="best-canvas" class='default-hidden'></canvas><br>
-		<canvas id="test-canvas" class='default-hidden'></canvas><br>
-		<div id='minmaxdiv'>
-			<button id='minmax'>▲</button>
-		</div>
-		<div id='toolbox'>
-			<div id="social">
-			  	<a href="http://twitter.com/share" class="twitter-share-button"
-	    			data-url="http://infoburp.github.io/webmona/"
-	    			data-text="Evolve a match to an image from random polygons"
-	    			data-count="horizontal" data-via="29a_ch">Tweet</a>
-				<div class="fb-like" data-href="http://infoburp.github.io/webmona/" data-send="true" data-layout="button_count" data-width="145" data-	show-faces="true" data-font="arial" data-colorscheme="light"></div>
-				&nbsp;
-	 			<div class="g-plusone" data-size="medium"
-	   				data-href="http://infoburp.github.io/webmona/" data-count="true"></div>
-	   			<div id="fb-root"></div>
-	   			<script>(function(d, s, id) 
-	   				{
-		   				var js, fjs = d.getElementsByTagName(s)[0];
-		   				if (d.getElementById(id)) return;
-		   				js = d.createElement(s); js.id = id;
-		   				js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-		   				fjs.parentNode.insertBefore(js, fjs);
-	   				}(document, 'script', 'facebook-jssdk'));
-	   			</script>
-   			</div><br>
-			<label>Upload image</label>
-			<input type='file' id='image-input' /><br>
-			<div id='top-button-container'>
-	
-			<button id='start'>▶ Start</button>
-			<button id='pause'>ll Pause</button><br><br></div><br>
-			Fitness <output id='fitness'></output><br><br>
-			Time elapsed <output id='time-elapsed'></output><br><br>
-			Mutations <output id='evolution-count'></output><br>
-			.Failed <output id='fail-total'></output><br>
-			.Succesful <output id='win-total'></output><br><br>
-			Win / fail ratio <output id='win-fail-ratio'></output><br><br>
-			Mutations/s <output id='evolutions-per-second'></output><br>
-			Average mutations/s <output id='average-evolutions-per-second'></output><br>
-			.Average fails per second <output id='fails-per-second'></output><br>
-			.Average wins per second <output id='wins-per-second'></output><br><br>
-			Consecutive failed mutations <output id='consecutive-failures'></output><br>
-			Consecutive successful mutations <output id='consecutive-wins'></output><br><br>
-			Most fails in a row <output id='fail-streak'></output><br>
-			Most wins in a row <output id='win-streak'></output><br><br>
-			<label for='num-polys'>Polygons</label>
-			<input id='num-polys' type='number' step='1' min='1' max='1000' value='64' /><br>
-			<label for='num-verts'>Vertices&nbsp;&nbsp;</label>
-			<input id='num-verts' type='number' step='1' min='3' max='30' value='3' /><br><br>
-			<div id='bottom-button-container'>
-			<textarea id='clipboard'></textarea><br>
-			<button id='b_export_dna'>Export DNA</button>
-			<button id='b_export_svg'>Export SVG</button>
-			<button id='b_import_dna'>Import DNA</button></div><br>
-		
+		<div class="container-fluid">
+			<div class="row" style="padding-top:15px;">
+				<div class="col-3">
+					<div class="card">
+				  		<canvas id="input-canvas" class='card-img-top'></canvas>
+				  		<div class="card-body">
+				    		<h4 class="card-title">Input image</h4>
+				    		<p class="card-text">Upload an image file here to evolve a polygonal approximation.</p>
+				    		<div class="row" style="padding-bottom: 8px;">
+				    		<input type='file' id='image-input' class="form-control" />
+				    		</div>
+							<div class="row" style="padding-bottom: 8px;">
+								<div class="col-6">
+									Polygons
+								</div>
+								<div class="col-6">
+									<input id='num-polys' type='number' step='1' min='1' max='1000' value='64' class="form-control"/>
+								</div>
+							</div>
+							<div class="row" style="padding-bottom: 8px;">
+								<div class="col-6">
+									Vertices
+								</div>
+								<div class="col-6">
+									<input id='num-verts' type='number' step='1' min='3' max='30' value='3' class="form-control"/>
+								</div>
+							</div>
+							<div class="row" style="padding-bottom: 8px;">
+								<div class="col-12">
+									<div class="btn-group" role="group" aria-label="Play/Pause Evolution" style="float:right">
+						  				<button type="button" class="btn btn-success" id='start'><i class="fa fa-play"></i></button>
+						  				<button type="button" class="btn btn-warning" id='pause'><i class="fa fa-pause"></i></button>
+									</div>
+								</div>
+							</div>
+				  		</div>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card">
+				  		<canvas id="best-canvas" class='card-img-top'></canvas>
+				  		<div class="card-body">
+				    		<h4 class="card-title">Best Match</h4> 
+				    		<div class="row" style="padding-bottom: 8px;">
+				    			<div class="col-12">
+				    				This evolution most closely matches the input image. <output id='fitness'></output>
+				    			</div>
+				    		</div>
+				    		<div class="row" style="padding-bottom: 8px;">
+				    			<div class="col-12">
+				    				<textarea rows="6" class="form-control" id='clipboard'></textarea>
+				    			</div>
+				    		</div>
+				    		<div class="row">
+				    			<div class="col-12">
+				    				<div class="btn-group" role="group" aria-label="Play/Pause Evolution" style="float:right">
+										<button href="#" class="btn btn-success" id='b_export_dna'><i class="fa fa-cloud-download"></i></button>
+										<button href="#" class="btn btn-primary" id='b_import_dna'><i class="fa fa-cloud-upload"></i></button>
+									</div>
+								</div>
+							</div>
+		  				</div>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card">
+				  		<canvas id="test-canvas" class='card-img-top'></canvas>
+				  		<div class="card-body">
+				    		<h4 class="card-title">Scratch Pad</h4>
+				    		<p class="card-text">Polygon combinations are tried out here to see if they are a closer match to the input image than the best match.</p>
+				  		</div>
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="card">
+		  				<div class="card-header">Statistics</div>
+						<ul class="list-group list-group-flush">
+		    				<li class="list-group-item">
+		    					<div class="row">
+		    						<div class='col-1'>
+		    							<i class="fa fa-clock-o"></i>
+		    						</div>
+		    						<div class='col-7'>
+		    							Time elapsed
+		    						</div>
+		    						<div class='col-3'>
+		    							<output id='time-elapsed'></output>
+		    						</div>
+		    					</div>
+		    				</li>
+		    				<li class="list-group-item">
+		    					<div class="row">
+		    						<div class='col-1'>
+		    							<i class="fa fa-percent"></i>
+		    						</div>
+		    						<div class='col-7'>
+		    							Match
+		    						</div>
+		    						<div class='col-3'>
+										<div class="progress">
+		  									<div class="progress-bar" role="progressbar" id="percent-match" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+		  									</div>
+										</div>
+									</div>
+								</div>
+							</li>
+		    				<li class="list-group-item">
+		    					<div class="row">
+		    						<div class='col-1'>
+		    							<i class="fa fa-line-chart"></i>
+		    						</div>
+		    						<div class='col-7'>
+		    							Mutations
+		    						</div>
+		    						<div class='col-3'>
+		    							<output id='evolution-count'></output>
+		    						</div>
+		    					</div>
+		    				</li>
+
+
+		    				<li class="list-group-item">
+		    					<div class="row">
+		    						<div class='col-1'>
+		    							<i class="fa fa-thumbs-o-down"></i>
+		    						</div>
+		    						<div class='col-7'>
+		    							Failed
+		    						</div>
+		    						<div class='col-3'>
+		    							<output id='fail-total'></output>
+		    						</div>
+		    					</div>
+		    				</li>
+							<li class="list-group-item">
+								<div class="row">
+									<div class='col-1'>
+										<i class="fa fa-thumbs-o-up"></i>
+									</div>
+									<div class='col-7'>
+										Successful
+									</div>
+									<div class='col-3'>
+										<output id='win-total'></output>
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="row">
+									<div class='col-1'>
+										<i class="fa fa-balance-scale"></i>
+									</div>
+									<div class='col-7'>
+										Win / fail ratio
+									</div>
+									<div class='col-3'>
+										<div class="progress">
+		  									<div class="progress-bar" role="progressbar" id="win-fail-ratio" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+										</div>
+
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="row">
+									<div class='col-1'>
+										<i class="fa fa-calendar"></i>
+									</div>
+									<div class='col-7'>
+										Mutations/s
+									</div>
+									<div class='col-3'>
+										<output id='evolutions-per-second'></output>
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="row">
+									<div class='col-1'>
+										<i class="fa fa-calendar-minus-o"></i>
+									</div>
+									<div class='col-7'>
+										Fails/s
+									</div>
+									<div class='col-3'>
+										<output id='fails-per-second'></output>
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="row">
+									<div class='col-1'>
+										<i class="fa fa-calendar-plus-o"></i>
+									</div>
+									<div class='col-7'>
+										Wins/s
+									</div>
+									<div class='col-3'>
+										<output id='wins-per-second'></output>
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="row">
+									<div class='col-1'>
+										<i class="fa fa-close"></i>
+									</div>
+									<div class='col-7'>
+										Most fails
+									</div>
+									<div class='col-3'>
+										<output id='fail-streak'></output>
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="row">
+									<div class='col-1'>
+										<i class="fa fa-check"></i>
+									</div>
+									<div class='col-7'>
+										Most wins
+									</div>
+									<div class='col-3'>
+										<output id='win-streak'></output>
+									</div>
+								</div>
+							</li>
+		  				</ul>
+
+					</div>
+				</div>
+			</div>
 		</div>
 		<script type="text/javascript" src="webmona.js"></script>
 	</body>
